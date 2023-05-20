@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +12,12 @@
       echo 'Hello from Vercel PHP!';
     ?>
   </h1>
-  <p>This is page two.</p>
+  <p>This is a nested page.</p>
   <nav>
     <a href="index.php">Go to Index</a>
     <a href="page-two.php">Go to Page 2</a>
-    <a href="php-info.php">View PHP Info</a>
     <a href="dir/nested.php">Go to Nested Page</a>
+    <a href="php-info.php">View PHP Info</a>
   </nav>
 </body>
 </html>

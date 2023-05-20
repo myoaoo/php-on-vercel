@@ -31,6 +31,7 @@
     <a href="index.php">Go to Index</a>
     <a href="page-two.php">Go to Page 2</a>
     <a href="php-info.php">View PHP Info</a>
+    <a href="dir/nested.php">Go to Nested Page</a>
   </nav>
 </body>
 </html>
