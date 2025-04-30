@@ -1,8 +1,30 @@
 {
-  "functions": {
-    "api/**/*.php": {
-      "runtime": "vercel-php@0.6.0"
-    }
-  },
-  "routes": [{ "src": "/(.*)", "dest": "/api/$0" }]
+    "functions": {
+        "api/**/*.php": {
+            "runtime": "vercel-php@0.6.0"
+        }
+    },
+    "routes": [
+        {
+            "src": "/source/(.*)\\.html$",
+            "dest": "/source/$1.html"
+        },
+        {
+            "src": "/source/(.*)\\.css$",
+            "dest": "/source/$1.css"
+        },
+        {
+            "src": "/source/images/(.*)\\.(png|jpg|jpeg|gif|svg)$",
+            "dest": "/source/images/$1.$2"
+        },
+        {
+            "src": "/source/(.*)\\.md$",
+            "dest": "/api/markdown.php?file=$1.md"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/$0"
+        }
+    ]
 }
+    

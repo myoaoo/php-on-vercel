@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +13,7 @@
     ?>
   </h1>
   <p>This is page two.</p>
+  <img src="../source/images/example1.jpg" alt="Example Image 1">
   <nav>
     <a href="index.php">Go to Index</a>
     <a href="page-two.php">Go to Page 2</a>
@@ -21,4 +21,4 @@
     <a href="dir/nested.php">Go to Nested Page</a>
   </nav>
 </body>
-</html>
+</html>    
