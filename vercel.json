@@ -6,6 +6,10 @@
     },
     "routes": [
         {
+            "src": "/api/source/images/(.*)\\.(png|jpg|jpeg|gif|svg)$",
+            "dest": "/source/images/$1.$2"
+        },	
+        {
             "src": "/source/(.*)\\.html$",
             "dest": "/source/$1.html"
         },
