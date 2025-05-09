@@ -14,6 +14,9 @@
   </h1>
   <p>This is page two.</p>
   <img src="../source/images/example1.jpg" alt="Example Image 1">
+  <img src="./source/images/12.png" alt="Example Image 2">
+  <img src="/source/images/12.png" alt="Example Image 3">
+  <img src="source/images/12.png" alt="Example Image 4">
   <nav>
     <a href="index.php">Go to Index</a>
     <a href="page-two.php">Go to Page 2</a>
