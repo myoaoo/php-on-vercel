@@ -135,12 +135,13 @@ $logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 
     /* Horizontal layout */
     .tree.horizontal {
-      display: flex;
-      justify-content: center;
+      width: 100%;
+      overflow-x: auto;
+      height: calc(100Vh - 40px);
     }
 
     .tree.horizontal ul {
-      padding-left: 20px;
+      padding: 20px;
       position: relative;
       transition: all 0.5s;
       display: flex;
@@ -438,8 +439,8 @@ $logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
             top: 60px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: #fff;
+            color: red;
             padding: 10px 20px;
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -449,15 +450,20 @@ $logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
             align-items: center;
             justify-content: space-between;
 			width: 100%;
-            max-width: 80%;
+            max-width: 80%;position: absolute;
+			letter-spacing: 1px;
+			line-height: 1.8;
         }
 
         
-        .announcement-close {
-            margin-left: 15px;
-            font-weight: bold;
-            
-        }
+		.announcement-close {
+			position: absolute;
+			top: 5px;          /* 距离顶部 5px */
+			right: 10px;       /* 距离右侧 10px */
+			font-weight: bold;
+			font-size: 18px;
+			cursor: pointer;
+		}
         
         .announcement-close:hover {
             color: #000;
@@ -465,9 +471,9 @@ $logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
     </style>  
     <div class="announcement" id="announcement">
         <span >
-		<p>尊敬的各位宗亲：</p>
-		<p>  &emsp;&emsp;衷心感谢大家此前提供的西坡村林氏信息！因个人能力有限，目前整理的资料尚不完善，恳请各位抽空核对自家人员信息是否准确。若发现有遗漏或错误，或了解其他宗亲情况，烦请告知。您的每一次核对与补充，都是为子孙后代留存完整的家族记忆，方便认祖归宗。拜托大家了！</p>
-		<p>林廷佳：13068104364 /微信同号</p>	
+		<p>尊敬的各位亲友：</p>
+		<p>&emsp;&emsp;衷心感谢大家此前提供的西坡村林氏人员信息！由于个人能力和精力有限，再加上一些家庭成员的特殊情况，当前整理的资料还不够完善。请各位在百忙中抽空核对一下自己家族成员的信息，如有遗漏或错误，或者了解其他宗亲的情况，还请不吝告知。<br>&emsp;&emsp;您的每一次核对和补充，都是为我们子孙后代留下珍贵的家族记忆，帮助大家更好地认祖归宗，也为后续的族谱制作提供宝贵的支持。再次感谢亲友们的帮助！</p>
+		<p>整理人：林廷佳 (13068104364 / 微信同号)</p>	
 		</span>
         <span class="announcement-close">&times;</span>
     </div> 
@@ -947,23 +953,31 @@ document.getElementById('familyTree').addEventListener('click', function (e) {
     }
 });
   </script> 
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const announcement = document.getElementById('announcement');
-		const closeBtn = announcement.querySelector('.announcement-close');
-		
-		closeBtn.addEventListener('click', function() {
-			announcement.style.display = 'none';
-		});
-		
-		// 可选：点击整个公告区域也可以关闭
-		announcement.addEventListener('click', function(e) {
-			if (e.target === announcement) {
-				announcement.style.display = 'none';
-			}
-		});
-	});
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const announcement = document.getElementById('announcement');
+            const closeBtn = announcement.querySelector('.announcement-close');
+            
+            // 点击关闭按钮关闭公告
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 阻止事件冒泡，避免触发 document 的点击事件
+                announcement.style.display = 'none';
+            });
+            
+            // 点击公告区域本身关闭公告
+            announcement.addEventListener('click', function() {
+                announcement.style.display = 'none';
+            });
+            
+            // 点击页面任意位置（公告区域外）关闭公告
+            document.addEventListener('click', function(e) {
+                // 如果点击的不是公告区域，则关闭公告
+                if (!announcement.contains(e.target)) {
+                    announcement.style.display = 'none';
+                }
+            });
+        });
+    </script>
   <?php else: ?>
  <style>
     /* 全局样式 */
