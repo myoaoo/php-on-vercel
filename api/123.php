@@ -1,23 +1,53 @@
+<?php
+// 引入 Parsedown.php 文件
+require 'Parsedown.php';
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHP on Vercel</title>
-</head>
-<body>
+// 设置文件夹路径
+$directory = 'source/_posts/';
 
-    <h1>这是输入密码后才显示的标题</h1>
-    <p>这是输入密码后才显示的内容330000</p>
-   
-    <nav>
-      <a href="index.php">Go to Index</a>
-      <a href="page-two.php">Go to Page 2</a>
-      <a href="php-info.php">View PHP Info</a>
-      <a href="dir/nested.php">Go to Nested Page</a>
-    </nav>
+// 检查文件夹是否存在
+if (!is_dir($directory)) {
+    echo "文件夹不存在！";
+    exit;
+}
 
-</body>
-</html>
+// 打开文件夹
+if ($handle = opendir($directory)) {
+    // 遍历文件夹中的文件
+    while (($file = readdir($handle)) !== false) {
+        // 过滤掉 "." 和 ".." 文件夹
+        if ($file !== "." && $file !== "..") {
+            // 检查文件扩展名是否为 .md
+            if (pathinfo($file, PATHINFO_EXTENSION) === 'md') {
+                // 输出文件名并提供链接
+                echo '<a href="?file=' . urlencode($file) . '">' . htmlspecialchars($file) . '</a><br>';
+            }
+        }
+    }
+    closedir($handle);
+} else {
+    echo "无法打开文件夹！";
+}
+
+// 如果有查询参数 file，显示文件内容
+if (isset($_GET['file'])) {
+    $file = urldecode($_GET['file']);
+    $filePath = $directory . $file;
+
+    // 检查文件是否存在
+    if (file_exists($filePath)) {
+        // 读取文件内容
+        $markdownContent = file_get_contents($filePath);
+
+        // 创建 Parsedown 实例并解析 Markdown 内容为 HTML
+        $parsedown = new Parsedown();
+        $htmlContent = $parsedown->text($markdownContent);
+
+        // 显示 HTML 内容
+        echo '<h2>文件内容：</h2>';
+        echo $htmlContent;
+    } else {
+        echo "文件不存在！";
+    }
+}
+?>
