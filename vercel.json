@@ -6,16 +6,19 @@
     },
     "routes": [
         {
+            "src": "/api/source/images/(.*)\\.(png|jpg|jpeg|gif|svg)$",
+            "dest": "/api/source/images/$1.$2",
+            "headers": {
+                "Cache-Control": "public, max-age=31536000, immutable"
+            }
+        },
+        {
             "src": "/api/source/(.*)\\.html$",
             "dest": "/api/source/$1.html"
         },
         {
             "src": "/api/source/(.*)\\.css$",
             "dest": "/api/source/$1.css"
-        },
-        {
-            "src": "/api/source/images/(.*)\\.(png|jpg|jpeg|gif|svg)$",
-            "dest": "/api/source/images/$1.$2"
         },
         {
             "src": "/api/source/_posts/(.*)\\.md$",

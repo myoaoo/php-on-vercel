@@ -3,7 +3,7 @@
 require 'Parsedown.php';
 
 // 设置文件夹路径
-$directory = 'source/_posts/';
+$directory = __DIR__ . '/source/_posts/';
 
 // 检查文件夹是否存在
 if (!is_dir($directory)) {
