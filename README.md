@@ -1,4 +1,6 @@
-# PHP on Vercel ▴
+# PHP on Vercel 
+
+php -S localhost:8000
 
 This is a repository I've created to test if we can get traditional PHP file-based
 routing working on the [community Vercel Functions PHP runtime](https://github.com/vercel-community/php).
