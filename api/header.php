@@ -35,7 +35,7 @@ foreach ($files as $index => $file) {
 // 获取网站根目录的 URL 路径（适用于 Apache/Nginx）
 $baseUrl = rtrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__), '/');
 ?>
-<link rel="stylesheet" href="<?php echo $baseUrl ?>/source/style.css">
+<link rel="stylesheet" href="<?php echo $baseUrl ?>/style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>   
@@ -175,7 +175,7 @@ ul > li { padding: 5px 0;}
 
  <header id="menuContainer">
 	<div class="nav" >
-	<div><a href="/" ><img src="/source/images/logo.svg" alt="Logo" class="logo"></a></div >
+	<div><a href="/" ><img src="/images/logo.svg" alt="Logo" class="logo"></a></div >
 	<div class="menu-container sidebar"></div>
 	<a href="javascript:void(0);" onclick="toggleSidebar()">☰</a>
 

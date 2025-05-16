@@ -1,6 +1,6 @@
 <?php
 // 博客配置
-define('POSTS_DIR', __DIR__ . '/source/_posts/');
+define('POSTS_DIR', __DIR__ . '/posts/');
 
 // 获取所有 Markdown 文件
 $files = glob(POSTS_DIR . '/*.md');
