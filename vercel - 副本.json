@@ -1,0 +1,37 @@
+{
+    "functions": {
+        "api/**/*.php": {
+            "runtime": "vercel-php@0.6.0"
+        }
+    },
+    "routes": [
+        {
+            "src": "/api/source/images/(.*)",
+            "headers": {
+                "Cache-Control": "public, max-age=31536000, immutable"
+            },
+            "continue": true
+        },
+        {
+            "src": "/api/source/(.*\\.(html|css))",
+            "dest": "/api/source/$1",
+            "continue": true
+        },
+        {
+            "src": "/api/source/(.*)\\.css$",
+            "dest": "/api/source/$1.css"
+        },
+        {
+            "src": "/api/source/_posts/(.*)\\.md$",
+            "dest": "/api/markdown.php?file=_posts/$1.md"
+        },
+        {
+            "src": "/api/source/(.*)\\.md$",
+            "dest": "/api/markdown.php?file=$1.md"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/$0"
+        }
+    ]
+}

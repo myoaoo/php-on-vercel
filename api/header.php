@@ -35,7 +35,7 @@ foreach ($files as $index => $file) {
 // 获取网站根目录的 URL 路径（适用于 Apache/Nginx）
 $baseUrl = rtrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__), '/');
 ?>
-<link rel="stylesheet" href="<?php echo $baseUrl ?>/style.css">
+<link rel="stylesheet" href="/style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>   
