@@ -1,0 +1,191 @@
+.carousel-container {
+	position: relative;
+	width: 100%;
+	height: 450px;
+	overflow: hidden;
+}
+
+.carousel-track {
+	display: flex;
+	height: 100%;
+	transition: transform 0.5s ease;
+}
+
+.carousel-slide {
+	min-width: 100%;
+	position: relative;
+}
+
+.carousel-slide img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.carousel-slide video {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background-color: #000;
+}
+
+.carousel-btn {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	border: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 20px;
+	z-index: 10;
+	transition: all 0.3s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.carousel-btn:hover {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-btn.prev {
+	left: 15px;
+}
+
+.carousel-btn.next {
+	right: 15px;
+}
+
+.carousel-indicators {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	gap: 10px;
+	z-index: 10;
+}
+
+.indicator {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.indicator.active {
+	background-color: #fff;
+	transform: scale(1.2);
+}
+
+.video-controls {
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 20;
+	display: flex;
+	gap: 10px;
+}
+
+.video-btn {
+	background-color: rgba(0, 0, 0, 0.7);
+	color: white;
+	border: none;
+	padding: 8px 15px;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: all 0.3s;
+}
+
+.video-btn:hover {
+	background-color: rgba(0, 0, 0, 0.9);
+}
+
+/*------------------------------------*/
+div.container {
+	display: flex;
+	flex-wrap: wrap;
+	border: 1px solid var(--oaoo-2, #e3e8f7);
+	overflow: hidden; 
+	background-color: var(--oaoo-5, #fff); 
+}
+div.container > div {
+	flex: 1;
+	min-width: 300px;
+	box-sizing: border-box;
+}
+div.container img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+div.container .content>div {padding: 20px;}
+
+/*------------------------------------*/
+
+main .text {
+	text-align: center;
+	margin: 50px 0;
+}
+main hr {
+    width: 130px;
+	margin: 20px auto;
+}
+
+.more{margin: 10px 0;}
+.more a {color: var(--oaoo-4, #00bbee);}
+
+/*历史人物------------------------------------*/
+.profile {
+	background-color: var(--oaoo-1, #f7f9fe);
+	/*border: 1px solid var(--oaoo-2, #e3e8f7);*/
+	padding: 20px;
+}
+.dynasty-tag {
+	display: inline-block;
+	padding: 3px 10px;
+	background-color: #ddd;
+	font-size: 0.8em;
+	margin-bottom: 12px;
+}
+.avatar {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1px solid var(--oaoo-2, #e3e8f7);
+	display: block;
+	margin: 0 auto 15px;
+}
+.name {
+	font-size: 22px;
+	text-align: center;
+	margin: 5px 0 10px;
+}
+.description {
+	text-align: justify;
+	margin-bottom: 15px;
+}
+.years {
+	text-align: center;
+
+}
+.no-image {
+	background-color: var(--oaoo-5, #fff);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+#profiles-container, #profiles-container-only {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+	gap: 25px;
+}

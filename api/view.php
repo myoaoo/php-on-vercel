@@ -136,8 +136,6 @@ $parsedown = new Parsedown();
     <title><?php echo htmlspecialchars($post['meta']['title'] ?? basename($fileName, '.md')); ?></title>
     <meta charset="UTF-8">
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -155,64 +153,16 @@ $parsedown = new Parsedown();
             }
         }
     </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .markdown-content h1 {
-                @apply text-3xl font-bold mt-8 mb-4;
-            }
-            .markdown-content h2 {
-                @apply text-2xl font-bold mt-6 mb-3;
-            }
-            .markdown-content h3 {
-                @apply text-xl font-bold mt-5 mb-2;
-            }
-            .markdown-content p {
-                @apply mb-4 leading-relaxed text-gray-700;
-            }
-            .markdown-content a {
-                @apply text-primary hover:underline;
-            }
-            .markdown-content ul {
-                @apply list-disc pl-5 mb-4;
-            }
-            .markdown-content ol {
-                @apply list-decimal pl-5 mb-4;
-            }
-            .markdown-content img {
-                @apply max-w-full rounded-lg my-6 shadow-md;
-            }
-            .markdown-content blockquote {
-                @apply border-l-4 border-primary pl-4 italic my-4 text-gray-600;
-            }
-            .markdown-content code {
-                @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
-            }
-            .markdown-content pre {
-                @apply bg-gray-800 text-white p-4 rounded my-4 overflow-x-auto;
-            }
-            .markdown-content pre code {
-                @apply bg-transparent p-0;
-            }
-        }
-    </style>
+  
 </head>
 <body class="bg-neutral text-dark min-h-screen flex flex-col">
     <?php include 'header.php'; ?>
 
     <!-- 主内容区 -->
-    <main class="flex-grow container mx-auto px-4 py-8">
+    <main>
         <?php if ($isProtected && !$passwordCorrect): ?>
             <!-- 密码输入表单 -->
-            <div class="max-w-md mx-auto bg-white rounded-xl shadow-sm p-6 md:p-8">
-                <div class="text-center mb-6">
-                    <i class="fa fa-lock text-4xl text-primary mb-3"></i>
-                    <h2 class="text-xl font-bold">此文章需要密码</h2>
-                    <p class="text-gray-500 mt-2">请输入密码查看内容</p>
-                </div>
-                
+            <div class="post">               
                 <?php if (isset($errorMessage)): ?>
                     <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4">
                         <i class="fa fa-exclamation-circle mr-2"></i> <?php echo $errorMessage; ?>
@@ -221,52 +171,42 @@ $parsedown = new Parsedown();
                 
                 <form method="POST" class="space-y-4">
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">文章密码</label>
-                        <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="请输入密码...">
+                        <label for="password" >文章密码</label>
+                        <input type="password" id="password" name="password"  placeholder="请输入密码...">
                     </div>
-                    <button type="submit" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center">
-                        <i class="fa fa-unlock-alt mr-2"></i> 解锁文章
-                    </button>
+                    <button type="submit"> 提交</button>
                 </form>
             </div>
         <?php else: ?>
             <!-- 文章内容 -->
             <article class="max-w-3xl mx-auto bg-white rounded-xl shadow-sm overflow-hidden">
-                <?php if (isset($post['meta']['cover'])): ?>
-                    <div class="relative">
-                        <img src="<?php echo htmlspecialchars($post['meta']['cover']); ?>" alt="<?php echo htmlspecialchars($post['meta']['title']); ?>" class="w-full h-64 md:h-80 object-cover">
-                        <?php if ($isProtected): ?>
-                            <div class="absolute top-3 right-3 bg-dark/70 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm">
-                                <i class="fa fa-lock mr-1"></i> 加密
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
-                
-                <div class="p-6 md:p-8">
-                    <div class="text-sm text-primary font-medium mb-2">#<?php echo $id; ?></div>
-                    <h1 class="text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-3">
-                        <?php echo htmlspecialchars($post['meta']['title'] ?? basename($fileName, '.md')); ?>
-                    </h1>
+
+                <div class="post">
+
                     
-                    <div class="flex items-center text-sm text-gray-500 mb-6">
-                        <div class="flex items-center mr-4">
-                            <i class="fa fa-calendar-o mr-1"></i>
-                            <span><?php echo isset($post['meta']['date']) ? $post['meta']['date'] : date('Y-m-d', $post['mtime']); ?></span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fa fa-file-text-o mr-1"></i>
-                            <span><?php echo round(str_word_count(strip_tags($post['body'])) / 200, 1); ?> 分钟阅读</span>
-                        </div>
+                    <div class="flex">
+						<h1><?php echo htmlspecialchars($post['meta']['title'] ?? basename($fileName, '.md')); ?></h1>
+							<div>
+							<div>#<?php echo $id; ?></div>
+							<div>
+								<i class="fas fa-calendar-alt"></i>
+								<span><?php echo isset($post['meta']['date']) ? $post['meta']['date'] : date('Y-m-d', $post['mtime']); ?></span>
+							</div>
+							<div>
+								<i class="fas fa-eye"></i>
+								<span><?php echo round(str_word_count(strip_tags($post['body'])) / 200, 1); ?> 分钟阅读</span>
+							</div>
+						</div>
+						
                     </div>
                     
                     <div class="markdown-content">
                         <?php echo $parsedown->text($post['body']); ?>
                     </div>
                     
-                    <div class="mt-8 pt-6 border-t border-gray-100">
-                        <a href="post.php" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-200">
-                            <i class="fa fa-arrow-left mr-2"></i> 返回博客列表
+                    <div class="reply">
+                        <a href="post.php" >
+                            <i class="fas fa-reply"></i> 返回博客列表
                         </a>
                     </div>
                 </div>
@@ -275,24 +215,7 @@ $parsedown = new Parsedown();
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-dark text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <p>&copy; <?php echo date('Y'); ?> My Markdown Blog. All rights reserved.</p>
-                <div class="mt-4 flex justify-center space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fa fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fa fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fa fa-envelope text-xl"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    	<?php include 'footer.php'; ?>
 
     <script>
         // 导航栏滚动效果

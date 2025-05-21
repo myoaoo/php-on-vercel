@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优化多媒体轮播图</title>
+    <style>
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+        
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .carousel-btn.prev {
+            left: 15px;
+        }
+        
+        .carousel-btn.next {
+            right: 15px;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background-color: #fff;
+            transform: scale(1.2);
+        }
+        
+        .video-controls {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .video-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .video-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        {% banner %}
+        https://www.oaoo.top/music/images/5.jpg,自然风景01,
+        images/linfrom.mp4
+        images/example1.jpg,城市风光
+        https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4
+        {% endbanner %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bannerContainers = document.querySelectorAll('.banner-container');
+            
+            bannerContainers.forEach(container => {
+                const bannerTag = container.innerHTML.trim();
+                
+                if (bannerTag.startsWith('{% banner %}') && bannerTag.endsWith('{% endbanner %}')) {
+                    const content = bannerTag
+                        .replace('{% banner %}', '')
+                        .replace('{% endbanner %}', '')
+                        .trim();
+                    
+                    const carouselData = parseBannerContent(content);
+                    
+                    const carouselContainer = document.createElement('div');
+                    carouselContainer.className = 'carousel-container';
+                    
+                    carouselContainer.innerHTML = `
+                        <div class="carousel-track"></div>
+                        <button class="carousel-btn prev">&lt;</button>
+                        <button class="carousel-btn next">&gt;</button>
+                        <div class="carousel-indicators"></div>
+                    `;
+                    
+                    container.innerHTML = '';
+                    container.appendChild(carouselContainer);
+                    
+                    const carouselTrack = carouselContainer.querySelector('.carousel-track');
+                    const prevBtn = carouselContainer.querySelector('.carousel-btn.prev');
+                    const nextBtn = carouselContainer.querySelector('.carousel-btn.next');
+                    const indicatorsContainer = carouselContainer.querySelector('.carousel-indicators');
+                    
+                    const firstSlide = carouselData[0];
+                    const lastSlide = carouselData[carouselData.length - 1];
+                    const extendedData = [lastSlide, ...carouselData, firstSlide];
+                    
+                    let currentIndex = 1;
+                    let isPlaying = true;
+                    let autoPlayInterval;
+                    const slideInterval = 3000;
+                    let isVideoPlaying = false;
+
+                    function initCarousel() {
+                        carouselTrack.innerHTML = '';
+                        indicatorsContainer.innerHTML = '';
+                        
+                        extendedData.forEach((slide, index) => {
+                            const slideElement = document.createElement('div');
+                            slideElement.className = 'carousel-slide';
+                            
+                            if (slide.type === 'image') {
+                                const img = document.createElement('img');
+                                img.src = slide.src;
+                                img.alt = slide.alt || '';
+                                slideElement.appendChild(img);
+                            } else if (slide.type === 'video') {
+                                const video = document.createElement('video');
+                                video.src = slide.src;
+                                video.controls = true;
+                                video.muted = true;
+                                video.loop = false;
+                                video.playsinline = true;
+                                slideElement.appendChild(video);
+                                
+                                video.addEventListener('play', () => {
+                                    isVideoPlaying = true;
+                                    clearInterval(autoPlayInterval);
+                                });
+                                
+                                video.addEventListener('pause', () => {
+                                    isVideoPlaying = false;
+                                    if (isPlaying) {
+                                        startAutoPlay();
+                                    }
+                                });
+                                
+                                video.addEventListener('ended', () => {
+                                    isVideoPlaying = false;
+                                    if (isPlaying) {
+                                        startAutoPlay();
+                                    }
+                                });
+                                
+                                const controls = document.createElement('div');
+                                controls.className = 'video-controls';
+                                
+                                const playBtn = document.createElement('button');
+                                playBtn.className = 'video-btn';
+                                playBtn.textContent = '播放视频';
+                                playBtn.addEventListener('click', () => {
+                                    video.play();
+                                    controls.style.display = 'none';
+                                });
+                                
+                                controls.appendChild(playBtn);
+                                slideElement.appendChild(controls);
+                            }
+                            
+                            carouselTrack.appendChild(slideElement);
+                        });
+                        
+                        carouselData.forEach((slide, index) => {
+                            const indicator = document.createElement('div');
+                            indicator.className = 'indicator';
+                            if (index === 0) indicator.classList.add('active');
+                            indicator.addEventListener('click', () => goToSlide(index + 1));
+                            indicatorsContainer.appendChild(indicator);
+                        });
+                        
+                        updateCarouselPosition(true);
+                        startAutoPlay();
+                    }
+                    
+                    function updateCarouselPosition(instant = false) {
+                        if (instant) {
+                            carouselTrack.style.transition = 'none';
+                        } else {
+                            carouselTrack.style.transition = 'transform 0.5s ease';
+                        }
+                        
+                        carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+                        
+                        if (currentIndex === 0) {
+                            setTimeout(() => {
+                                currentIndex = carouselData.length;
+                                carouselTrack.style.transition = 'none';
+                                carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+                            }, 500);
+                        } else if (currentIndex === extendedData.length - 1) {
+                            setTimeout(() => {
+                                currentIndex = 1;
+                                carouselTrack.style.transition = 'none';
+                                carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+                            }, 500);
+                        }
+                        
+                        updateIndicators();
+                        handleVideos();
+                    }
+                    
+                    function updateIndicators() {
+                        const indicators = document.querySelectorAll('.indicator');
+                        let realIndex;
+                        
+                        if (currentIndex === 0) {
+                            realIndex = carouselData.length - 1;
+                        } else if (currentIndex === extendedData.length - 1) {
+                            realIndex = 0;
+                        } else {
+                            realIndex = currentIndex - 1;
+                        }
+                        
+                        indicators.forEach((indicator, index) => {
+                            if (index === realIndex) {
+                                indicator.classList.add('active');
+                            } else {
+                                indicator.classList.remove('active');
+                            }
+                        });
+                    }
+                    
+                    function handleVideos() {
+                        const slides = document.querySelectorAll('.carousel-slide');
+                        
+                        slides.forEach((slide, index) => {
+                            const video = slide.querySelector('video');
+                            const controls = slide.querySelector('.video-controls');
+                            
+                            if (video) {
+                                if (index === currentIndex) {
+                                    controls.style.display = 'flex';
+                                    video.pause();
+                                } else {
+                                    video.pause();
+                                    video.currentTime = 0;
+                                    controls.style.display = 'none';
+                                }
+                            }
+                        });
+                    }
+                    
+                    function nextSlide() {
+                        currentIndex++;
+                        updateCarouselPosition();
+                        resetAutoPlay();
+                    }
+                    
+                    function prevSlide() {
+                        currentIndex--;
+                        updateCarouselPosition();
+                        resetAutoPlay();
+                    }
+                    
+                    function goToSlide(index) {
+                        currentIndex = index;
+                        updateCarouselPosition();
+                        resetAutoPlay();
+                    }
+                    
+                    function startAutoPlay() {
+                        if (isPlaying && !isVideoPlaying) {
+                            autoPlayInterval = setInterval(nextSlide, slideInterval);
+                        }
+                    }
+                    
+                    function resetAutoPlay() {
+                        clearInterval(autoPlayInterval);
+                        startAutoPlay();
+                    }
+                    
+                    prevBtn.addEventListener('click', () => {
+                        prevSlide();
+                    });
+                    
+                    nextBtn.addEventListener('click', () => {
+                        nextSlide();
+                    });
+                    
+                    carouselTrack.addEventListener('mouseenter', () => {
+                        clearInterval(autoPlayInterval);
+                    });
+                    
+                    carouselTrack.addEventListener('mouseleave', () => {
+                        if (isPlaying && !isVideoPlaying) {
+                            startAutoPlay();
+                        }
+                    });
+                    
+                    let touchStartX = 0;
+                    let touchEndX = 0;
+                    
+                    carouselTrack.addEventListener('touchstart', (e) => {
+                        touchStartX = e.changedTouches[0].screenX;
+                        clearInterval(autoPlayInterval);
+                    }, {passive: true});
+                    
+                    carouselTrack.addEventListener('touchend', (e) => {
+                        touchEndX = e.changedTouches[0].screenX;
+                        handleSwipe();
+                        if (isPlaying && !isVideoPlaying) {
+                            startAutoPlay();
+                        }
+                    }, {passive: true});
+                    
+                    function handleSwipe() {
+                        const threshold = 50;
+                        if (touchEndX < touchStartX - threshold) {
+                            nextSlide();
+                        } else if (touchEndX > touchStartX + threshold) {
+                            prevSlide();
+                        }
+                    }
+                    
+                    function parseBannerContent(content) {
+                        const lines = content
+                            .split('\n')
+                            .map(line => line.trim())
+                            .filter(line => line.length > 0);
+                        
+                        return lines.map(line => {
+                            const parts = line.split(',');
+                            const src = parts[0].trim();
+                            
+                            const isVideo = src.toLowerCase().endsWith('.mp4') || 
+                                           src.toLowerCase().endsWith('.webm') || 
+                                           src.toLowerCase().endsWith('.ogg');
+                                           
+                            if (isVideo) {
+                                return {
+                                    type: 'video',
+                                    src: src
+                                };
+                            } else {
+                                const alt = parts.length > 1 ? parts[1].trim() : '';
+                                return {
+                                    type: 'image',
+                                    src: src,
+                                    alt: alt
+                                };
+                            }
+                        });
+                    }
+                    
+                    initCarousel();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

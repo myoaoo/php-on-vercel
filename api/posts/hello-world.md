@@ -1,6 +1,6 @@
 ---
 title: Hello World2
-cover: 1.jpg
+cover: https://fastly.picsum.photos/id/546/600/400.jpg?hmac=DihO_j-eFueKyqEievwZ3-je4TfIFY3mQF1YiEANknk
 password: 123
 id: 9
 ---

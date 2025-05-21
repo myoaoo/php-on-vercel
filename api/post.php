@@ -62,67 +62,18 @@ foreach ($files as $index => $file) {
     <title>我的 Markdown 博客</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#165DFF',
-                        secondary: '#69b1ff',
-                        neutral: '#f5f7fa',
-                        dark: '#1d2129',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .markdown-content h1 {
-                @apply text-2xl font-bold mt-6 mb-3;
-            }
-            .markdown-content h2 {
-                @apply text-xl font-bold mt-5 mb-2;
-            }
-            .markdown-content h3 {
-                @apply text-lg font-bold mt-4 mb-1;
-            }
-            .markdown-content p {
-                @apply mb-4 leading-relaxed;
-            }
-            .markdown-content a {
-                @apply text-primary hover:underline;
-            }
-            .markdown-content ul {
-                @apply list-disc pl-5 mb-4;
-            }
-            .markdown-content ol {
-                @apply list-decimal pl-5 mb-4;
-            }
-            .markdown-content img {
-                @apply max-w-full rounded-lg my-4;
-            }
-        }
-       
+    <style>
+
+
+
     </style>
 </head>
-<body class="bg-neutral text-dark min-h-screen flex flex-col">
+<body>
     <?php include 'header.php'; ?>
 
     <!-- 主内容区 -->
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold mb-8 text-center">我的 Markdown 博客</h1>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <main>         
+            <div class="grid">
                 <?php foreach ($files as $file): ?>
                     <?php 
                     $post = parseMarkdownFile($file);
@@ -135,34 +86,40 @@ foreach ($files as $index => $file) {
                     // 获取日期（优先使用元数据中的日期）
                     $date = isset($post['meta']['date']) ? $post['meta']['date'] : date('Y-m-d', $post['mtime']);
                     ?>
-                    <article class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="relative">
-                            <img src="<?php echo htmlspecialchars($cover); ?>" alt="<?php echo htmlspecialchars($post['meta']['title'] ?? '封面图'); ?>" class="w-full h-48 object-cover">
+                    <div class="post-list">
+                        <div class="up">
+                            <img src="<?php echo htmlspecialchars($cover); ?>" alt="<?php echo htmlspecialchars($post['meta']['title'] ?? '封面图'); ?>">
                             <?php if ($isProtected): ?>
-                                <div class="absolute top-3 right-3 bg-dark/70 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm">
+                                <div class="absolute top-3 right-3 bg-dark/70">
                                     <i class="fa fa-lock mr-1"></i> 加密
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <div class="p-6">
-                            <div class="text-sm text-primary font-medium mb-2">#<?php echo $id; ?></div>
-                            <h2 class="text-xl font-bold mb-2">
-                                <a href="view.php?id=<?php echo $id; ?>" class="text-dark hover:text-primary transition-colors duration-200">
+                        <div class="down">
+                            
+                            <h2>
+                                <a href="view.php?id=<?php echo $id; ?>" class="">
                                     <?php echo htmlspecialchars($post['meta']['title'] ?? basename($file, '.md')); ?>
                                 </a>
                             </h2>
-                            <div class="text-sm text-gray-500 mb-3 flex items-center">
-                                <i class="fa fa-calendar-o mr-2"></i>
-                                <?php echo $date; ?>
-                            </div>
-                            <p class="text-gray-600 mb-4 line-clamp-3">
+
+                            <p class="">
                                 <?php echo strip_tags($parsedown->text(substr($post['body'], 0, 300))); ?>
                             </p>
-                            <a href="view.php?id=<?php echo $id; ?>" class="inline-flex items-center text-primary hover:text-secondary transition-colors duration-200">
-                                阅读更多 <i class="fa fa-arrow-right ml-1"></i>
-                            </a>
+                            <div>
+                                <div>
+									<i class="fas fa-calendar-alt"></i>
+									<?php echo $date; ?>
+								</div>
+								<div>
+									<a href="view.php?id=<?php echo $id; ?>" class="">
+										阅读更多 <i class="fa fa-arrow-right ml-1"></i>
+									</a>
+								</div>								
+                            </div>							
+
                         </div>
-                    </article>
+                    </div>
                 <?php endforeach; ?>
             </div>
             
@@ -173,28 +130,10 @@ foreach ($files as $index => $file) {
                     <p class="text-gray-500">暂无文章</p>
                 </div>
             <?php endif; ?>
-        </div>
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-dark text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <p>&copy; <?php echo date('Y'); ?> My Markdown Blog. All rights reserved.</p>
-                <div class="mt-4 flex justify-center space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fa fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fa fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fa fa-envelope text-xl"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <script>
         // 导航栏滚动效果
@@ -210,4 +149,4 @@ foreach ($files as $index => $file) {
         });
     </script>
 </body>
-</html>  
+</html>

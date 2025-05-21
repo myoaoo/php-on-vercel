@@ -35,33 +35,22 @@ foreach ($files as $index => $file) {
 // 获取网站根目录的 URL 路径（适用于 Apache/Nginx）
 $baseUrl = rtrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__), '/');
 ?>
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/public/css/style.css">
+<link rel="stylesheet" href="/public/css/all.min.css">
+<link rel="stylesheet" href="/public/css/Plugin.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>   
-:root {
-  --oaoo-1: #f7f9fe; /* 主颜色1 #f7f9fe background-color: var(--oaoo-1, #f7f9fe);*/
-  --oaoo-2: #e3e8f7; /* 边框颜色#e3e8f7 */
-  --oaoo-3: #f0f4ff; /* 颜色 3 页脚*/ 
-  --oaoo-4: #00bbee;  /* 颜色 4 蓝色 蓝色 */
-}
 
-* {
-	margin: 0;
-	padding: 0;
-	
-}
 
-body {
-background-color: var(--oaoo-1, #f7f9fe);}
+
+
 ul {
 	list-style: none;
 }
-a {
-	text-decoration: none;
-	color: #1e395b;
-}
+
 header {
+	position: fixed;
     width: 100%;
     background-color: #ffffff30;
     top: 0;
@@ -141,6 +130,9 @@ li.active > ul {
 	}
 	.menu-container > ul > li.active > ul {
 		border: 0px solid var(--oaoo-2, #f7f9fe);
+	}	
+	.nav, main, footer > div {
+		width: calc(100% - 40px);
 	}	
 }
 
